@@ -3,10 +3,11 @@ from aiogram import Bot, Dispatcher, F
 
 import app.handlers as main_handlers
 import app.Handlers.readers_handlers as readers_handlers
+from token import token
 
 
 async def main():
-    bot = Bot(token='6352754030:AAGDI-kcK-6iLZwPlFFuQgVLJmQj_kpMEDQ')
+    bot = Bot(token=token)
     # Управляет хэндлерами
 
     dp = Dispatcher()
