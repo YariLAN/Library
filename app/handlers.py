@@ -3,6 +3,7 @@ from aiogram.filters import CommandStart, Command
 from aiogram import F, Router
 
 import app.keyboards as kb
+from app.Repositories.categoriesRepository import categoriesRepository
 
 router = Router()
 
@@ -14,7 +15,7 @@ async def cmd_start(message):
 
 @router.message(Command('help'))
 async def cmd_help(message: Message):
-    await message.answer("Пошел нахуй!")
+    await categoriesRepository.getCategories()
 
 
 # Плохой пример

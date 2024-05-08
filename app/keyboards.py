@@ -30,6 +30,8 @@ async def create_reply_keyboard(entity):
 
     for action in ["Добавить", "Удалить", "Изменить", "Показать"]:
         keyboard.add(KeyboardButton(text=f"{action} {entity}"))
+    keyboard.add(KeyboardButton(text="Список всех"))
+    keyboard.add(KeyboardButton(text="Выход"))
     return keyboard.adjust(2).as_markup(resize_keyboard=True)
 
 readers = create_reply_keyboard("читателя")

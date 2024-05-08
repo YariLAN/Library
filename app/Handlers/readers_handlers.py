@@ -1,10 +1,15 @@
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.filters import CommandStart, Command
+from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, \
+    KeyboardButton
 from aiogram import F, Router
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+
+from app.DbModels.Reader import ReaderMapper
+from app.Repositories.categoriesRepository import categoriesRepository
 
 import app.keyboards as kb
-import app.DtoModels.Reader.createReaderDto as dto
+import app.StatesModels.Reader.createReaderDto as dto
+from app.Repositories.readersRepository import ReadersRepository
 
 router = Router()
 
@@ -15,53 +20,59 @@ async def addReader(message: Message, state: FSMContext):
     await message.answer("Введите ФИО читателя")
 
 
-# Временное решение
+async def inline_categories():
+    df = await categoriesRepository.getCategories()
+    data = df.values.tolist()
 
-category_list = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="1. Студент", callback_data="1")],
-    [InlineKeyboardButton(text="1. Студент", callback_data="2")],
-    [InlineKeyboardButton(text="3. Школьник", callback_data="3")]],
-    resize_keyboard=True)
+    builder = InlineKeyboardBuilder()
+    for row in data:
+        builder.add(InlineKeyboardButton(text=row[1], callback_data=f"{row[0]}"))
 
+    builder.adjust(2)
 
-# Временное решение
+    return builder.as_markup()
 
 
 @router.message(dto.CreateReaderDto.name)
 async def addReader_name(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
     await state.set_state(dto.CreateReaderDto.category)
-    await message.answer("Выберите категорию читателя", reply_keyboard=category_list)
+    await message.answer("Выберите категорию читателя", reply_markup=await inline_categories())
 
 
 @router.callback_query(dto.CreateReaderDto.category)
-async def addReader_category(message: Message, callback: CallbackQuery, state: FSMContext):
-    await state.update_data(category=callback.data)
+async def addReader_category(callback_query: CallbackQuery, state: FSMContext):
+    await state.update_data(category=callback_query.data)
     await state.set_state(dto.CreateReaderDto.address)
-    await message.answer("Введите адрес читателя")
+    await callback_query.message.answer("Введите адрес читателя")
 
 
 @router.message(dto.CreateReaderDto.address)
 async def addReader_address(message: Message, state: FSMContext):
     await state.update_data(address=message.text)
     await state.set_state(dto.CreateReaderDto.phone)
-    await message.answer("Введите телефон читателя")
+    await message.answer("Введите телефон читателя (8 800 555 35 35)")
 
 
 @router.message(dto.CreateReaderDto.phone)
 async def addReader_phone(message: Message, state: FSMContext):
     await state.update_data(phone=message.text)
     await state.set_state(dto.CreateReaderDto.email)
-    await message.answer("Введите email читателя (при наличие)")
+    await message.answer("Введите email читателя (при наличие)",
+                         keyboard=ReplyKeyboardMarkup(
+                             keyboard=[[KeyboardButton(text="Почты нет")]]))
 
 
 @router.message(dto.CreateReaderDto.email)
 async def addReader_email(message: Message, state: FSMContext):
-    await state.update_data(email=message.text)
+    email = None if message.text == "Почты нет" else message.text
+
+    await state.update_data(email=email)
+
     data = await state.get_data()
-    await message.answer(
-        f"Ваше ФИО: {data['name']}\n"
-        f"Категория: {data['category']}\n"
-        f"Адрес: {data['address']}\n"
-        f"Телефон: {data['phone']}\n"
-        f"Email: {data['email']}")
+    result = await ReadersRepository.add_reader(
+        ReaderMapper.toMap(data["name"], data["category"], data["address"], data["phone"], data["email"]))
+
+    if result:
+        await message.answer(f"Читатель с ФИО {data['name']} успешно добавлен",
+                             reply_markup=await kb.readers)
