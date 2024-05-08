@@ -58,14 +58,12 @@ async def addReader_address(message: Message, state: FSMContext):
 async def addReader_phone(message: Message, state: FSMContext):
     await state.update_data(phone=message.text)
     await state.set_state(dto.CreateReaderDto.email)
-    await message.answer("Введите email читателя (при наличие)",
-                         keyboard=ReplyKeyboardMarkup(
-                             keyboard=[[KeyboardButton(text="Почты нет")]]))
+    await message.answer("Введите email читателя (при наличие)", reply_markup=kb.warning_email_button)
 
 
 @router.message(dto.CreateReaderDto.email)
 async def addReader_email(message: Message, state: FSMContext):
-    email = None if message.text == "Почты нет" else message.text
+    email = None if message.text == kb.warning_email_button.keyboard[0][0].text else message.text
 
     await state.update_data(email=email)
 

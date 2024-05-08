@@ -16,6 +16,7 @@ librarian = ReplyKeyboardMarkup(keyboard=[
     resize_keyboard=True,
     input_field_placeholder="Выберите пункт меню...")
 
+warning_email_button = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="Почты нет")]], resize_keyboard=True)
 
 # Кнопки для выбора из категорий
 async def set_inline_buttons_from_db(entities):
