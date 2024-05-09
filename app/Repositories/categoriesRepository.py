@@ -1,31 +1,14 @@
 import app.DatabaseProvider.provider as provider
 import pandas as pd
 
+from app.Repositories.baseRepository import BaseRepository
 
-class categoriesRepository:
+
+class CategoriesRepository:
+
     @staticmethod
     async def getCategories():
-        try:
-            connect = provider.connection
-            with connect.cursor() as cursor:
-                cursor.execute("SELECT * FROM category_type")
-                categories = cursor.fetchall()
+        return await BaseRepository.get_query("SELECT * FROM category_type")
 
-                return pd.DataFrame(categories)
-        except Exception as e:
-            print("Ошибка при получении категорий:", e)
-            return None
-
-    @staticmethod
     async def getCategory(id: int):
-        try:
-            connect = provider.connection
-            with connect.cursor() as cursor:
-                cursor.execute(f"SELECT * FROM category_type WHERE id = {id}")
-                category = cursor.fetchall()
-
-                return pd.DataFrame(category)
-
-        except Exception as e:
-            print("Ошибка при получении категории:", e)
-            return None
+        return await BaseRepository.get_query(f"SELECT * FROM category_type WHERE id_category= {id}")

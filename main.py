@@ -1,9 +1,15 @@
 import asyncio
-from aiogram import Bot, Dispatcher, F
+from aiogram import Bot, Dispatcher
 
 import app.handlers as main_handlers
 import app.Handlers.readers_handlers as readers_handlers
-from token import token
+import app.Handlers.books_handlers as books_handlers
+import app.Handlers.librarians_handlers as librarians_handlers
+import app.Handlers.bookNotLibrary_handlers as bookNotLibrary_handlers
+import app.Handlers.fines_handlers as fines_handlers
+import app.Handlers.genre_handlers as genre_handlers
+
+from app.token import token
 
 
 async def main():
@@ -11,8 +17,16 @@ async def main():
     # Управляет хэндлерами
 
     dp = Dispatcher()
+
     dp.include_router(main_handlers.router)
-    dp.include_router(readers_handlers.router)
+    dp.include_routers(
+        readers_handlers.router,
+        books_handlers.router,
+        bookNotLibrary_handlers.router,
+        librarians_handlers.router,
+        fines_handlers.router,
+        genre_handlers.router)
+
     await dp.start_polling(bot)
 
 

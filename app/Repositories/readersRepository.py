@@ -2,9 +2,14 @@ import app.DatabaseProvider.provider as provider
 import pandas as pd
 
 from app.DbModels.Reader import Reader
+from app.Repositories.baseRepository import BaseRepository
 
 
 class ReadersRepository(object):
+
+    @staticmethod
+    async def getReaders():
+        return await BaseRepository.get_query("SELECT * FROM reader")
 
     @staticmethod
     async def add_reader(reader: Reader):
