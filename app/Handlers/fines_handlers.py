@@ -4,7 +4,7 @@ from aiogram.types import Message
 from app.Repositories.fineRepository import FineRepository
 from app.Repositories.fineRepository import FineTypesRepository
 
-from app.handlers import CRUD_button
+from app.handlers import CRUD_button_with_table
 
 router = Router()
 
@@ -15,7 +15,7 @@ async def get_fines(message: Message):
 
     df.set_index("id_fine", inplace=True)
 
-    await CRUD_button(message, df, "fines")
+    await CRUD_button_with_table(message, df, "fines")
 
 
 @router.message(F.text == "Виды штрафов")
@@ -25,4 +25,4 @@ async def get_fine_types(message: Message):
     df = df.rename(columns={"id_fine_type": "id", "name_fine": "name", "amount_fine": "amount"})
     df.set_index("id", inplace=True)
 
-    await CRUD_button(message, df, "fine_type")
+    await CRUD_button_with_table(message, df, "fine_type")

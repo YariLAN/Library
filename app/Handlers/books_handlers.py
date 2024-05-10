@@ -2,7 +2,7 @@ from aiogram import F, Router
 from aiogram.types import Message
 
 from app.Repositories.booksRepository import BooksRepository
-from app.handlers import CRUD_button
+from app.handlers import CRUD_button_with_table
 
 router = Router()
 
@@ -15,4 +15,4 @@ async def getReaders(message: Message):
 
     df.set_index('id', inplace=True)
 
-    await CRUD_button(message, df, "books")
+    await CRUD_button_with_table(message, df, "books")

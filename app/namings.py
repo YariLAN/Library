@@ -1,5 +1,4 @@
-
-admin, librarian, director, bibliographer = [
+librarian, admin, director, bibliographer = [
     "Библиотекарь",
     "Администратор БД 👌",
     "Директор Библиотеки",

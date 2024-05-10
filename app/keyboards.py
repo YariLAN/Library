@@ -36,6 +36,8 @@ second_part_tables = ReplyKeyboardMarkup(keyboard=second_part_tables_buttons,
 
 warning_email_button = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="Почты нет")]], resize_keyboard=True)
 
+cancel_keyboard = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="Отменить")]], resize_keyboard=True)
+
 
 # Кнопки для выбора из категорий
 async def set_inline_buttons_from_db(entities):
@@ -73,8 +75,5 @@ def create_keyboard():
 
     return keyboard.as_markup(resize_keyboard=True)
 
-
-# InlineKeyboardMarkup
-crud_reader_inline = create_inline_keyboard(Reader.__tableName__)
 
 back_button = create_keyboard()

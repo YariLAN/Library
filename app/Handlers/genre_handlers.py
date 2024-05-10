@@ -4,7 +4,7 @@ from aiogram.types import Message
 from app.Repositories.returningBooksRepository import ReturningBooksRepository
 from app.Repositories.typesBookRepository import GenreRepository
 from app.Repositories.typesBookRepository import TypesLiteratureRepository
-from app.handlers import CRUD_button
+from app.handlers import CRUD_button_with_table
 
 router = Router()
 
@@ -15,7 +15,7 @@ async def genres(message: Message):
 
     df.set_index("id_genre", inplace=True)
 
-    await CRUD_button(message, df, "genre")
+    await CRUD_button_with_table(message, df, "genre")
 
 
 @router.message(F.text == "Жанры литературы")
@@ -24,4 +24,4 @@ async def literatures(message: Message):
 
     df.set_index("id_literature_type", inplace=True)
 
-    await CRUD_button(message, df, "literature_type")
+    await CRUD_button_with_table(message, df, "literature_type")

@@ -7,22 +7,29 @@ from aiogram import F, Router
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 import tabulate
 
-from app.DbModels.Reader import ReaderMapper
+from app.DbModels.Reader import ReaderMapper, Reader
 from app.Repositories.categoriesRepository import CategoriesRepository
 
 import app.keyboards as kb
 import app.StatesModels.Reader.createReaderDto as dto
 from app.Repositories.discountRepository import DiscountRepository
 from app.Repositories.readersRepository import ReadersRepository
-from app.handlers import CRUD_button
+from app.handlers import CRUD_button_with_table
 
 router = Router()
 
+# InlineKeyboardMarkup
+crud_reader_inline = kb.create_inline_keyboard(Reader.__tableName__)
 
-@router.callback_query(F.data == "reader_add")
-async def addReader(callback_query: CallbackQuery, state: FSMContext):
-    await state.set_state(dto.CreateReaderDto.name)
-    await callback_query.message.answer("Введите ФИО читателя")
+
+@router.callback_query(F.data.startswith("reader"))
+async def CRUD_reader(callback_query: CallbackQuery, state: FSMContext):
+    if callback_query.data == "reader_add":
+        await state.set_state(dto.CreateReaderDto.name)
+        await callback_query.message.answer("Введите ФИО читателя", reply_markup=kb.cancel_keyboard)
+
+    if callback_query.data == "reader_list":
+        await getReaders(callback_query.message)
 
 
 async def inline_categories():
@@ -78,8 +85,9 @@ async def addReader_email(message: Message, state: FSMContext):
         ReaderMapper.toMap(data["name"], data["category"], data["address"], data["phone"], data["email"]))
 
     if result:
-        await message.answer(f"Читатель с ФИО {data['name']} успешно добавлен",
-                             reply_markup=await kb.readers)
+        await message.answer(f"Читатель с ФИО {data['name']} успешно добавлен", reply_markup=crud_reader_inline)
+    else:
+        await message.answer("Доавить не удалось", reply_markup=crud_reader_inline)
 
 
 @router.message(F.text == "Читатели")
@@ -89,13 +97,13 @@ async def getReaders(message: Message):
     df = df.rename(columns={"fk_id_category": "c", "id_reader": "id", "first_name": "name"})
     df.set_index('id', inplace=True)
 
-    await CRUD_button(message, df, "reader")
+    await CRUD_button_with_table(message, df, "reader")
 
 
 @router.message(F.text == "Категории читателей")
 async def getCategories(message: Message):
     df = await CategoriesRepository.getCategories()
-    await CRUD_button(message, df, "category_type")
+    await CRUD_button_with_table(message, df, "category_type")
 
 
 @router.message(F.text == "Скидки")
@@ -104,4 +112,4 @@ async def getDiscounts(message: Message):
     df = df.rename(columns={"id_discount": "id", "amount_discount": "amount"})
     df.set_index('id', inplace=True)
 
-    await CRUD_button(message, df, "discount_type")
+    await CRUD_button_with_table(message, df, "discount_type")
