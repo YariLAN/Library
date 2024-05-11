@@ -2,9 +2,11 @@ from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
+import app.keyboards as kb
 from app.Repositories.librariansRepository import LibrariansRepository
 from app.StatesModels.Librarian.authLibrarianDto import AuthLibrarianDto
-from app.handlers import CRUD_button_with_table, librarians_ids
+from app.handlers import CRUD_button_with_table, librarians_ids, register_role
+from app.namings import librarian
 
 router = Router()
 
@@ -35,3 +37,8 @@ async def auth_librarian_name(message: Message, state: FSMContext):
         await message.reply("<b>Такого библиотекаря не существует ⚠️</b>", parse_mode="HTML")
     else:
         librarians_ids[message.from_user.id] = df["id"].values[0]
+        register_role[librarian].append(message.from_user.id)
+        print(f"{librarian}: ", register_role[librarian])
+
+        await message.reply("<b>Вы успешно вошли как библиотекарь</b>", parse_mode="HTML")
+        await message.answer("Выберите, с чем вы хотите работать", reply_markup=kb.first_part_tables)

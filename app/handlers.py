@@ -33,13 +33,12 @@ async def cmd_help(message: Message):
 
 @router.message(F.text.in_([admin, librarian, director, bibliographer]))
 async def choose_role(message: Message, state: FSMContext):
-    register_role[message.text].append(message.from_user.id)
-    print(f"{message.text}: ", register_role[message.text])
-
     if message.text == librarian:
         await state.set_state(AuthLibrarianDto.name)
         await message.reply("Введите свое ФИО для входа")
     else:
+        register_role[message.text].append(message.from_user.id)
+        print(f"{message.text}: ", register_role[message.text])
         await message.answer("Выберите, с чем вы хотите работать", reply_markup=kb.first_part_tables)
 
 

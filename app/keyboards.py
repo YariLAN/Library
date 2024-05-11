@@ -3,7 +3,7 @@ from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton,
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 
 from app.DbModels.Reader import Reader
-from app.namings import admin, librarian, director, bibliographer, d_action
+from app.namings import admin, librarian, director, bibliographer, d_action, d_ent_func
 
 mainButtons = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text=admin)],
@@ -20,11 +20,24 @@ first_part_tables_buttons = [
     [KeyboardButton(text="Выход"), KeyboardButton(text="Еще -->")]]
 
 second_part_tables_buttons = [
-    [KeyboardButton(text="Виды штрафов")],
-    [KeyboardButton(text="Штрафы")],
+    [KeyboardButton(text="Виды штрафов"), KeyboardButton(text="Штрафы")],
     [KeyboardButton(text="Скидки")],
-    [KeyboardButton(text="<-- Назад")]
-]
+    [KeyboardButton(text="Дополнительные функции")],
+    [KeyboardButton(text="<-- Назад")]]
+
+additional_buttons = ReplyKeyboardMarkup(keyboard=[
+    [KeyboardButton(text=d_ent_func[0]), KeyboardButton(text=d_ent_func[1])],
+    [KeyboardButton(text=d_ent_func[2]), KeyboardButton(text=d_ent_func[3])],
+    [KeyboardButton(text="<-- Назад")]],
+    resize_keyboard=True)
+
+additional_readers_buttons = ReplyKeyboardMarkup(keyboard=[
+    [KeyboardButton(text='Читатели по категории'), KeyboardButton(text="Читатели с выбранной книгой")],
+    [KeyboardButton(text="Читатели с просроченной книгой"), KeyboardButton(text="Общая стоимость за книгу")],
+    [KeyboardButton(text="Читатели с книгой по жанру")],
+    [KeyboardButton(text="Назад")]],
+    resize_keyboard=True,
+    input_field_placeholder="Выберите запрос")
 
 first_part_tables = ReplyKeyboardMarkup(keyboard=first_part_tables_buttons,
                                         resize_keyboard=True,

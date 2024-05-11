@@ -12,6 +12,26 @@ class ReadersRepository(object):
         return await BaseRepository.get_query("SELECT * FROM reader")
 
     @staticmethod
+    async def getReadersByCategory(category: int):
+        return await BaseRepository.get_query(f"CALL get_readers_by_category({category})")
+
+    @staticmethod
+    async def getReadersByBook(book_id: int):
+        return await BaseRepository.get_query(f"CALL get_reader_by_book({book_id})")
+
+    @staticmethod
+    async def getReadersByGenreOfBookInPeriod(genre: str, start_date: str, end_date: str):
+        return await BaseRepository.get_query(f"CALL get_readers_with_books_in_period({start_date}, {end_date}, {genre})")
+
+    @staticmethod
+    async def getReadersWithOverdue():
+        return await BaseRepository.get_query("CALL get_readers_with_overdue()")
+
+    @staticmethod
+    async def getTotalCost(id_reader: int, date_last: str):
+        return await BaseRepository.get_query(f"CALL total_cost({id_reader}, {date_last})")
+
+    @staticmethod
     async def add_reader(reader: Reader):
         connect = provider.connection
 
