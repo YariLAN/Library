@@ -38,6 +38,15 @@ additional_readers_buttons = ReplyKeyboardMarkup(keyboard=[
     resize_keyboard=True,
     input_field_placeholder="Выберите запрос")
 
+additional_librarians_buttons = ReplyKeyboardMarkup(keyboard=[
+    [KeyboardButton(text="Выработок библиотекарей")],
+    [KeyboardButton(text="Стаж")],
+    [KeyboardButton(text="Число обслуженных категорий")],
+    [KeyboardButton(text="Назад")]],
+    resize_keyboard=True,
+    input_field_placeholder="Выберите запрос")
+
+
 first_part_tables = ReplyKeyboardMarkup(keyboard=first_part_tables_buttons,
                                         resize_keyboard=True,
                                         input_field_placeholder="Выберите пункт меню...")

@@ -22,7 +22,7 @@ class LibrariansRepository:
 
     @staticmethod
     async def getLibrariansWork(start_date: str, end_date: str):
-        return await BaseRepository.get_query(f"CALL get_librarians_work({start_date}, {end_date})")
+        return await BaseRepository.get_query(f"CALL get_librarians_work('{start_date}', '{end_date}')")
 
     @staticmethod
     async def getExperience(experience: int):

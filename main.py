@@ -8,7 +8,8 @@ import app.Handlers.librarians_handlers as librarians_handlers
 import app.Handlers.bookNotLibrary_handlers as bookNotLibrary_handlers
 import app.Handlers.fines_handlers as fines_handlers
 import app.Handlers.genre_handlers as genre_handlers
-import app.Handlers.stored_procedures_handlers as stored_procedures
+import app.Handlers.StoredProcedures.procedures_readers_handlers as procedures_readers
+import app.Handlers.StoredProcedures.procedures_librarians_handlers as procedures_librarians
 
 from app.token import token
 
@@ -27,7 +28,8 @@ async def main():
         librarians_handlers.router,
         fines_handlers.router,
         genre_handlers.router,
-        stored_procedures.router)
+        procedures_readers.router,
+        procedures_librarians.router)
 
     await dp.start_polling(bot)
 
