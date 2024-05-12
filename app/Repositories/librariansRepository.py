@@ -30,4 +30,4 @@ class LibrariansRepository:
 
     @staticmethod
     async def getCountCategory(id_librarian: int):
-        return await BaseRepository.get_query(f"get_count_category({id_librarian})")
+        return await BaseRepository.get_query(f"CALL get_count_category({id_librarian})")

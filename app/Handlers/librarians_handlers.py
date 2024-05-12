@@ -4,9 +4,9 @@ from aiogram.types import Message
 
 import app.keyboards as kb
 from app.Repositories.librariansRepository import LibrariansRepository
-from app.StatesModels.Librarian.authLibrarianDto import AuthLibrarianDto
+from app.StatesModels.Librarian.authLibrarianState import AuthLibrarianDto
 from app.handlers import CRUD_button_with_table, librarians_ids, register_role
-from app.namings import librarian
+from app.Resources.texts.namings import librarian
 
 router = Router()
 

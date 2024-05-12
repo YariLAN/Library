@@ -6,8 +6,8 @@ from aiogram import F, Router
 
 import app.keyboards as kb
 from app.Repositories.categoriesRepository import CategoriesRepository
-from app.StatesModels.Librarian.authLibrarianDto import AuthLibrarianDto
-from app.namings import admin, librarian, director, bibliographer
+from app.StatesModels.Librarian.authLibrarianState import AuthLibrarianDto
+from app.Resources.texts.namings import admin, librarian, director, bibliographer
 
 router = Router()
 
@@ -80,13 +80,20 @@ async def cancel_button(message: Message):
 
 
 async def CRUD_button_with_table(message: Message, df: pd.DataFrame, table_name: str):
-
     if df.empty:
-        await message.reply("<b>Таблица пустая ⚠️</b>", parse_mode="HTML")
+        await df_empty(df, message)
     else:
-        await message.reply(text=f"<pre>{df.to_markdown()}</pre>", parse_mode="HTML")
+        await answer_dataframe(df, message)
+
     await message.answer("Выберите вариант", reply_markup=kb.create_inline_keyboard(table_name))
 
     msg = await message.answer("_", reply_markup=ReplyKeyboardRemove())
     await msg.delete()
 
+
+async def df_empty(df: pd.DataFrame, message: Message):
+    await message.reply("<b>Таблица пустая ⚠️</b>", parse_mode="HTML")
+
+
+async def answer_dataframe(df: pd.DataFrame, message: Message):
+    await message.answer(text=f"<pre>{df.to_markdown()}</pre>", parse_mode="HTML")

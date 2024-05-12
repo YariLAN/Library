@@ -11,7 +11,7 @@ from app.DbModels.Reader import ReaderMapper, Reader
 from app.Repositories.categoriesRepository import CategoriesRepository
 
 import app.keyboards as kb
-import app.StatesModels.Reader.createReaderDto as dto
+import app.StatesModels.Reader.createReaderState as dto
 from app.Repositories.discountRepository import DiscountRepository
 from app.Repositories.readersRepository import ReadersRepository
 from app.handlers import CRUD_button_with_table
@@ -92,12 +92,18 @@ async def addReader_email(message: Message, state: FSMContext):
 
 @router.message(F.text == "Читатели")
 async def getReaders(message: Message):
+    df = await getReadersDataframe()
+
+    await CRUD_button_with_table(message, df, "reader")
+
+
+async def getReadersDataframe():
     df = await ReadersRepository.getReaders()
 
     df = df.rename(columns={"fk_id_category": "c", "id_reader": "id", "first_name": "name"})
     df.set_index('id', inplace=True)
 
-    await CRUD_button_with_table(message, df, "reader")
+    return df
 
 
 @router.message(F.text == "Категории читателей")

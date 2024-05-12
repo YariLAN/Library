@@ -2,8 +2,7 @@ from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton,
                            InlineKeyboardButton, InlineKeyboardMarkup)
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 
-from app.DbModels.Reader import Reader
-from app.namings import admin, librarian, director, bibliographer, d_action, d_ent_func
+from app.Resources.texts.namings import admin, librarian, director, bibliographer, d_action, d_ent_func
 
 mainButtons = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text=admin)],

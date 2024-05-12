@@ -20,8 +20,8 @@ class ReadersRepository(object):
         return await BaseRepository.get_query(f"CALL get_reader_by_book({book_id})")
 
     @staticmethod
-    async def getReadersByGenreOfBookInPeriod(genre: str, start_date: str, end_date: str):
-        return await BaseRepository.get_query(f"CALL get_readers_with_books_in_period({start_date}, {end_date}, {genre})")
+    async def getReadersByGenreOfBookInPeriod(genre: int, start_date: str, end_date: str):
+        return await BaseRepository.get_query(f"CALL get_readers_with_books_in_period('{start_date}', '{end_date}', {genre})")
 
     @staticmethod
     async def getReadersWithOverdue():
@@ -29,7 +29,7 @@ class ReadersRepository(object):
 
     @staticmethod
     async def getTotalCost(id_reader: int, date_last: str):
-        return await BaseRepository.get_query(f"CALL total_cost({id_reader}, {date_last})")
+        return await BaseRepository.get_query(f"CALL total_cost({id_reader}, '{date_last}')")
 
     @staticmethod
     async def add_reader(reader: Reader):
