@@ -11,6 +11,7 @@ import app.Handlers.genre_handlers as genre_handlers
 import app.Handlers.StoredProcedures.procedures_readers_handlers as procedures_readers
 import app.Handlers.StoredProcedures.procedures_librarians_handlers as procedures_librarians
 import app.Handlers.StoredProcedures.procedures_genres_handlers as procedures_genre
+import app.Handlers.StoredProcedures.procedures_books_handlers as procedures_books
 
 from app.token import token
 
@@ -31,7 +32,8 @@ async def main():
         genre_handlers.router,
         procedures_readers.router,
         procedures_librarians.router,
-        procedures_genre.router)
+        procedures_genre.router,
+        procedures_books.router)
 
     await dp.start_polling(bot)
 

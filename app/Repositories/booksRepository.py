@@ -9,4 +9,4 @@ class BooksRepository:
 
     @staticmethod
     async def getWrittenOffBooks():
-        return await BaseRepository.get_query("CALL written_off_books()")
+        return await BaseRepository.get_query("CALL written_off_books();")
