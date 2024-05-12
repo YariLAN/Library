@@ -9,7 +9,7 @@ class GenreRepository:
 
     @staticmethod
     async def getPopularGenres(start_date: str, end_date: str):
-        return await BaseRepository.get_query(f"CALL popular_genre({start_date}, {end_date})")
+        return await BaseRepository.get_query(f"CALL popular_genre('{start_date}', '{end_date}');")
 
 
 class TypesLiteratureRepository:

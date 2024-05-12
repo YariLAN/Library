@@ -16,7 +16,7 @@ router = Router()
 
 
 @router.message(F.text == d_ent_func[1])
-async def create_func_readers_keyboard(message: Message):
+async def create_func_librarians_keyboard(message: Message):
     await message.delete()
     await message.answer("Список функций", reply_markup=kb.additional_librarians_buttons)
 
