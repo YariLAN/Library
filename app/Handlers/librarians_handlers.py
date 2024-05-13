@@ -5,7 +5,7 @@ from aiogram.types import Message
 import app.keyboards as kb
 from app.Repositories.librariansRepository import LibrariansRepository
 from app.StatesModels.Librarian.authLibrarianState import AuthLibrarianDto
-from app.handlers import CRUD_button_with_table, librarians_ids, register_role
+from app.handlers import CRUD_button_with_table, librarians_ids, register_role, context
 from app.Resources.texts.namings import librarian
 
 router = Router()
@@ -26,7 +26,6 @@ async def getLibrarians(message: Message):
     await CRUD_button_with_table(message, df, "ibrarians")
 
 
-
 @router.message(AuthLibrarianDto.name)
 async def auth_librarian_name(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
@@ -39,7 +38,8 @@ async def auth_librarian_name(message: Message, state: FSMContext):
     else:
         librarians_ids[message.from_user.id] = df["id"].values[0]
         register_role[librarian].append(message.from_user.id)
-        print(f"{librarian}: ", register_role[librarian])
+        context.set_connection(librarian)
 
+        print(f"{librarian}: ", register_role[librarian])
         await message.reply("<b>Вы успешно вошли как библиотекарь</b>", parse_mode="HTML")
         await message.answer("Выберите, с чем вы хотите работать", reply_markup=kb.first_part_tables)

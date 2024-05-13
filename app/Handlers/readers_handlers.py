@@ -2,7 +2,7 @@ import asyncio
 
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, \
-    KeyboardButton
+    KeyboardButton, ReplyKeyboardRemove
 from aiogram import F, Router
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 import tabulate
@@ -85,9 +85,12 @@ async def addReader_email(message: Message, state: FSMContext):
         ReaderMapper.toMap(data["name"], data["category"], data["address"], data["phone"], data["email"]))
 
     if result:
-        await message.answer(f"Читатель с ФИО {data['name']} успешно добавлен", reply_markup=crud_reader_inline)
+        await message.answer(f"Читатель с ФИО {data['name']} успешно добавлен")
     else:
-        await message.answer("Доавить не удалось", reply_markup=crud_reader_inline)
+        await message.answer(f"Добавить не удалось. {result}")
+
+    await state.clear()
+    await getReaders(message)
 
 
 @router.message(F.text == "Читатели")

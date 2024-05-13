@@ -1,6 +1,8 @@
 import asyncio
 from aiogram import Bot, Dispatcher
+from aiogram.types import Message
 
+import app.keyboards as kb
 import app.handlers as main_handlers
 import app.Handlers.readers_handlers as readers_handlers
 import app.Handlers.books_handlers as books_handlers
@@ -15,11 +17,20 @@ import app.Handlers.StoredProcedures.procedures_books_handlers as procedures_boo
 
 from app.token import token
 
+chat_ids = [463609327, 726580446]
+
 
 async def main():
     bot = Bot(token=token)
-    # Управляет хэндлерами
 
+    if all(not array for array in main_handlers.register_role.values()):
+        for chat_id in chat_ids:
+            await bot.send_message(
+                chat_id,
+                'Добро пожаловать в библиотеку ада! Выберите роль',
+                reply_markup=kb.mainButtons)
+
+    # Управляет хэндлерами
     dp = Dispatcher()
 
     dp.include_router(main_handlers.router)

@@ -1,8 +1,8 @@
-import app.DatabaseProvider.provider as provider
-import pandas as pd
+
 
 from app.DbModels.Reader import Reader
 from app.Repositories.baseRepository import BaseRepository
+from app.handlers import context
 
 
 class ReadersRepository(object):
@@ -33,7 +33,7 @@ class ReadersRepository(object):
 
     @staticmethod
     async def add_reader(reader: Reader):
-        connect = provider.connection
+        connect = context.connection
 
         try:
             with connect.cursor() as cursor:

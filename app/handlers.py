@@ -5,11 +5,12 @@ from aiogram.filters import CommandStart, Command
 from aiogram import F, Router
 
 import app.keyboards as kb
-from app.Repositories.categoriesRepository import CategoriesRepository
+from app.DatabaseProvider.provider import ProviderDb
 from app.StatesModels.Librarian.authLibrarianState import AuthLibrarianDto
 from app.Resources.texts.namings import admin, librarian, director, bibliographer
 
 router = Router()
+context = ProviderDb()
 
 register_role = {
     admin: [],
@@ -21,14 +22,24 @@ register_role = {
 librarians_ids = {}
 
 
+def delete_register_role(value):
+    print(register_role)
+    key = get_register_role(value)
+    register_role[key].remove(value)
+
+
+def get_register_role(user_id: int):
+    for key, value in register_role.items():
+        if user_id in value:
+            return key
+
+    return None
+
+
 @router.message(CommandStart())
-async def cmd_start(message):
+async def cmd_start(message: Message):
     await message.answer('Добро пожаловать в библиотеку ада! Выберите роль', reply_markup=kb.mainButtons)
-
-
-@router.message(Command('help'))
-async def cmd_help(message: Message):
-    await CategoriesRepository.getCategories()
+    print(message.chat.id)
 
 
 @router.message(F.text.in_([admin, librarian, director, bibliographer]))
@@ -38,6 +49,8 @@ async def choose_role(message: Message, state: FSMContext):
         await message.reply("Введите свое ФИО для входа")
     else:
         register_role[message.text].append(message.from_user.id)
+        context.set_connection(get_register_role(message.from_user.id))
+
         print(f"{message.text}: ", register_role[message.text])
         await message.answer("Выберите, с чем вы хотите работать", reply_markup=kb.first_part_tables)
 
@@ -50,13 +63,6 @@ async def choose_entities_more(message: Message):
 @router.message(F.text == "<-- Назад")
 async def choose_entities_back(message: Message):
     await message.reply("Выберите, с чем вы хотите работать", reply_markup=kb.first_part_tables)
-
-
-def delete_register_role(value):
-    keys = {k for k, v in register_role.items() if value in v}
-
-    for key in keys:
-        register_role[key].remove(value)
 
 
 @router.message(F.text == "Выход")
