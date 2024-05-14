@@ -29,17 +29,19 @@ async def getLibrarians(message: Message):
 @router.message(AuthLibrarianDto.name)
 async def auth_librarian_name(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
-    names = message.text.split(" ")
+    context.set_connection(librarian)
+    await state.clear()
 
+    names = message.text.split(" ")
     df = await LibrariansRepository.getLibrarianByName(names[0], names[1], names[2])
 
     if df.empty:
         await message.reply("<b>Такого библиотекаря не существует ⚠️</b>", parse_mode="HTML")
-    else:
-        librarians_ids[message.from_user.id] = df["id"].values[0]
-        register_role[librarian].append(message.from_user.id)
-        context.set_connection(librarian)
+        return
 
-        print(f"{librarian}: ", register_role[librarian])
-        await message.reply("<b>Вы успешно вошли как библиотекарь</b>", parse_mode="HTML")
-        await message.answer("Выберите, с чем вы хотите работать", reply_markup=kb.first_part_tables)
+    librarians_ids[message.from_user.id] = df["id"].values[0]
+    register_role[librarian].append(message.from_user.id)
+
+    print(f"{librarian}: ", register_role[librarian])
+    await message.reply("<b>Вы успешно вошли как библиотекарь</b>", parse_mode="HTML")
+    await message.answer("Выберите, с чем вы хотите работать", reply_markup=kb.first_part_tables)

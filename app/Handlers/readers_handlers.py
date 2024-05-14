@@ -18,9 +18,6 @@ from app.handlers import CRUD_button_with_table
 
 router = Router()
 
-# InlineKeyboardMarkup
-crud_reader_inline = kb.create_inline_keyboard(Reader.__tableName__)
-
 
 @router.callback_query(F.data.startswith("reader"))
 async def CRUD_reader(callback_query: CallbackQuery, state: FSMContext):

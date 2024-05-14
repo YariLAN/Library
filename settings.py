@@ -8,3 +8,9 @@ users = {
     'Директор Библиотеки': {'name': 'director', 'password': 'director'},
     'Библиограф': {'name': 'bibliographer', 'password': 'bibli123'}
 }
+
+rights_role = {
+    'Библиотекарь': ["reader", "issued", "returning_books", "fines"],
+    'Директор Библиотеки': ["books", "ibrarians", "discount_type", "fine_type", "category_type"],
+    'Библиограф': ["books", "genre", "literature_type"]
+}

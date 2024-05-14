@@ -3,6 +3,7 @@ from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton,
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 
 from app.Resources.texts.namings import admin, librarian, director, bibliographer, d_action, d_ent_func
+from settings import rights_role
 
 mainButtons = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text=admin)],
@@ -58,7 +59,6 @@ additional_books_buttons = ReplyKeyboardMarkup(keyboard=[
     resize_keyboard=True,
     input_field_placeholder="Выберите запрос")
 
-
 first_part_tables = ReplyKeyboardMarkup(keyboard=first_part_tables_buttons,
                                         resize_keyboard=True,
                                         input_field_placeholder="Выберите пункт меню...")
@@ -90,10 +90,15 @@ def create_reply_keyboard(entity):
     return keyboard.adjust(2).as_markup(resize_keyboard=True)
 
 
-def create_inline_keyboard(table_name: str):
+def create_inline_keyboard(table_name: str, role: str):
     keyboard = InlineKeyboardBuilder()
 
-    for key in d_action.keys():
+    if role == admin or table_name in rights_role[role]:
+        buttons = d_action.keys()
+    else:
+        buttons = list(d_action.keys())[3:5]
+
+    for key in buttons:
         keyboard.add(InlineKeyboardButton(text=key, callback_data=f"{table_name}_{d_action[key]}"))
 
     keyboard.add(InlineKeyboardButton(text="Вернуться к другим данным", callback_data="back"))

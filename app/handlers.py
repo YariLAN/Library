@@ -91,7 +91,9 @@ async def CRUD_button_with_table(message: Message, df: pd.DataFrame, table_name:
     else:
         await answer_dataframe(df, message)
 
-    await message.answer("Выберите вариант", reply_markup=kb.create_inline_keyboard(table_name))
+    await message.answer(
+        "Выберите вариант",
+        reply_markup=kb.create_inline_keyboard(table_name, get_register_role(message.chat.id)))
 
     msg = await message.answer("_", reply_markup=ReplyKeyboardRemove())
     await msg.delete()
