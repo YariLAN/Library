@@ -1,3 +1,4 @@
+import pandas as pd
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, FSInputFile
@@ -34,6 +35,23 @@ async def get_librarians_work_start_date(message: Message, state: FSMContext):
     await message.answer("Введите дату окончания периода. \nФормат даты: YYYY-MM-DD")
 
 
+async def create_plot(message: Message, df: pd.DataFrame, data):
+    plt.figure(figsize=(12, 5))
+    plt.plot(df["name"], df["num_issued"], label="Списанные книги")
+    plt.plot(df["name"], df["num_received"], label="Полученные книги")
+
+    plt.grid()
+    plt.tight_layout()
+    plt.legend()
+
+    png = path_images + "librarians_work.png"
+    plt.savefig(png, dpi=300)
+
+    await message.answer_photo(
+        caption=f'Выработка каждого библиотекаря за {data["start_date"]} - {data["end_date"]}',
+        photo=FSInputFile(path=png))
+
+
 @router.message(GetIssueState.end_date)
 async def get_librarians_work_end_date(message: Message, state: FSMContext):
     await state.update_data(end_date=message.text)
@@ -44,8 +62,7 @@ async def get_librarians_work_end_date(message: Message, state: FSMContext):
     if df.empty:
         await df_empty(df, message)
     else:
-        df.set_index("id", inplace=True)
-        await answer_dataframe(df, message)
+        await create_plot(message, df, data)
 
 
 @router.message(F.text == "Стаж")
