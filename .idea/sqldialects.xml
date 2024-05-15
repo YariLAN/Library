@@ -6,6 +6,7 @@
     <file url="file://$PROJECT_DIR$/app/Repositories/discountRepository.py" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/app/Repositories/librariansRepository.py" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/app/Repositories/readersRepository.py" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/app/Repositories/returningBooksRepository.py" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/app/Repositories/typesBookRepository.py" dialect="GenericSQL" />
   </component>
 </project>

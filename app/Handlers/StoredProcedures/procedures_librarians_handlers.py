@@ -1,7 +1,7 @@
 import pandas as pd
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, FSInputFile
+from aiogram.types import Message, FSInputFile, InputFile
 import matplotlib.pyplot as plt
 
 import app.keyboards as kb
@@ -49,13 +49,14 @@ async def create_plot(message: Message, df: pd.DataFrame, data):
 
     await message.answer_photo(
         caption=f'Выработка каждого библиотекаря за {data["start_date"]} - {data["end_date"]}',
-        photo=FSInputFile(path=png))
+        photo=FSInputFile(png))
 
 
 @router.message(GetIssueState.end_date)
 async def get_librarians_work_end_date(message: Message, state: FSMContext):
     await state.update_data(end_date=message.text)
     data = await state.get_data()
+    await state.clear()
 
     df = await LibrariansRepository.getLibrariansWork(data["start_date"], data["end_date"])
 
@@ -75,6 +76,7 @@ async def get_experience(message: Message, state: FSMContext):
 async def get_experience_year(message: Message, state: FSMContext):
     await state.update_data(experience_year=message.text)
     data = await state.get_data()
+    await state.clear()
 
     df = await LibrariansRepository.getExperience(data["experience_year"])
 
@@ -105,6 +107,7 @@ async def get_count_categories(message: Message, state: FSMContext):
 async def get_count_categories_id(message: Message, state: FSMContext):
     await state.update_data(id_librarian=message.text)
     data = await state.get_data()
+    await state.clear()
 
     df = await LibrariansRepository.getCountCategory(int(data["id_librarian"]))
 

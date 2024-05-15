@@ -89,6 +89,7 @@ async def get_reader_with_overdue_books(message: Message):
     df = await ReadersRepository.getReadersWithOverdue()
     df.set_index('id', inplace=True)
 
+    plt.figure(figsize=(12, 8))
     plt.bar(df['name'], df['Просрок (в днях)'])
     plt.grid()
 

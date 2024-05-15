@@ -21,4 +21,15 @@ class BaseRepository:
             print("Ошибка при получении. Запрос: ", sql, "\nОшибка:", e)
             return None
 
-    # тут должны быть другие методы
+    @staticmethod
+    async def add_query(sql: str):
+        try:
+            connect = context.connection
+            with connect.cursor() as cursor:
+
+                cursor.execute(sql)
+                connect.commit()
+                return True
+        except Exception as e:
+            print("Ошибка при добавлении. Запрос: ", sql, "\nОшибка:", e)
+            return False
