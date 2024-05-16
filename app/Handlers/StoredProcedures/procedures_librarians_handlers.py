@@ -62,6 +62,8 @@ async def get_librarians_work_end_date(message: Message, state: FSMContext):
 
     if df.empty:
         await df_empty(df, message)
+    elif "Exception" in df.columns:
+        await answer_dataframe(df, message)
     else:
         await create_plot(message, df, data)
 
@@ -114,6 +116,9 @@ async def get_count_categories_id(message: Message, state: FSMContext):
     if df.empty:
         await df_empty(df, message)
         return
+
+    if "Exception" in df.columns:
+        await answer_dataframe(df, message)
 
     plt.figure(figsize=(12, 8))
     plt.pie(df['count_category'], labels=df['name_category'], autopct='%1.1f%%', startangle=140)

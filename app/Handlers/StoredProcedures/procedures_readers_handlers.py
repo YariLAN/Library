@@ -129,6 +129,7 @@ async def get_readers_with_books_by_genre_end(message: Message, state: FSMContex
 async def get_readers_with_books_by_genre_id(message: Message, state: FSMContext):
     await state.update_data(id_genre=message.text)
     data = await state.get_data()
+    await state.clear()
 
     df = await ReadersRepository.getReadersByGenreOfBookInPeriod(
         int(data['id_genre']), data['date_start'], data['date_end'])
@@ -160,12 +161,15 @@ async def get_book_price_reader_id(message: Message, state: FSMContext):
 @router.message(GetTotalCostForReaderState.date_last)
 async def get_book_price_date_last(message: Message, state: FSMContext):
     await state.update_data(date_last=message.text)
-
     data = await state.get_data()
+    await state.clear()
+
     df = await ReadersRepository.getTotalCost(int(data['id_reader']), data['date_last'])
 
     if df.empty:
         await df_empty(df, message)
+    elif "Exception" in df.columns:
+        await answer_dataframe(df, message)
     else:
         df.set_index('id_return_book', inplace=True)
         await answer_dataframe(df, message)

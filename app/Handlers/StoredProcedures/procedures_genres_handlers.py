@@ -34,6 +34,7 @@ async def get_popular_genres_start_date(message: Message, state: FSMContext):
 async def get_popular_genres_end_date(message: Message, state: FSMContext):
     await state.update_data(end_date=message.text)
     data = await state.get_data()
+    await state.clear()
 
     df = await GenreRepository.getPopularGenres(data["start_date"], data["end_date"])
 
@@ -41,5 +42,4 @@ async def get_popular_genres_end_date(message: Message, state: FSMContext):
         await df_empty(df, message)
         return
 
-    df.set_index("id", inplace=True)
     await answer_dataframe(df, message)
