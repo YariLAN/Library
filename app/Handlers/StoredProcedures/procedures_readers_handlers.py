@@ -50,14 +50,19 @@ async def get_readers_by_category(message: Message, state: FSMContext):
 @router.callback_query(GetCategoryDto.name)
 async def get_readers_by_category_name(callback_query: CallbackQuery, state: FSMContext):
     await state.update_data(name=callback_query.data)
-
     data = await state.get_data()
+    await state.clear()
+
     df = await ReadersRepository.getReadersByCategory(int(data["name"]))
 
-    df = df.rename(columns={"fk_id_category": "c", "id_reader": "id", "first_name": "name"})
-    df.set_index('id', inplace=True)
-
-    await callback_query.message.reply(text=f"<pre>{df.to_markdown()}</pre>", parse_mode="HTML")
+    if df.empty:
+        await df_empty(df, callback_query.message)
+    elif 'Exception' in df.columns:
+        await answer_dataframe(df, callback_query.message)
+    else:
+        df = df.rename(columns={"fk_id_category": "c", "id_reader": "id", "first_name": "name"})
+        df.set_index('id', inplace=True)
+        await answer_dataframe(df, callback_query.message)
 
 
 @router.message(F.text == "Читатели с выбранной книгой")
@@ -74,6 +79,7 @@ async def get_readers_by_book(message: Message, state: FSMContext):
 async def get_readers_by_book_name(message: Message, state: FSMContext):
     await state.update_data(id_reader=message.text)
     data = await state.get_data()
+    await state.clear()
 
     df = await ReadersRepository.getReadersByBook(int(data["id_reader"]))
 
