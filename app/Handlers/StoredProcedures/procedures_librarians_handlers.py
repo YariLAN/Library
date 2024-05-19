@@ -119,6 +119,7 @@ async def get_count_categories_id(message: Message, state: FSMContext):
 
     if "Exception" in df.columns:
         await answer_dataframe(df, message)
+        return
 
     plt.figure(figsize=(12, 8))
     plt.pie(df['count_category'], labels=df['name_category'], autopct='%1.1f%%', startangle=140)

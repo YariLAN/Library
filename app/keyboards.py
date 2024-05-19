@@ -59,6 +59,7 @@ additional_books_buttons = ReplyKeyboardMarkup(keyboard=[
     resize_keyboard=True,
     input_field_placeholder="Выберите запрос")
 
+
 first_part_tables = ReplyKeyboardMarkup(keyboard=first_part_tables_buttons,
                                         resize_keyboard=True,
                                         input_field_placeholder="Выберите пункт меню...")
@@ -93,6 +94,7 @@ def create_reply_keyboard(entity):
 def create_inline_keyboard(table_name: str, role: str):
     keyboard = InlineKeyboardBuilder()
 
+    # если роль админа или таблица входит в права другой роли
     if role == admin or table_name in rights_role[role]:
         buttons = d_action.keys()
     else:

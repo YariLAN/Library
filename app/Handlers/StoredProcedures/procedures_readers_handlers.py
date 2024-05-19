@@ -147,6 +147,7 @@ async def get_readers_with_books_by_genre_id(message: Message, state: FSMContext
         await answer_dataframe(df, message)
 
 
+# Метод с машиной состояний (FSM) для работы с дополнительными функциями
 @router.message(F.text == "Общая стоимость за книгу")
 async def get_book_price(message: Message, state: FSMContext):
     await state.set_state(GetTotalCostForReaderState.id_reader)

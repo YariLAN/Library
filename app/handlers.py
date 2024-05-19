@@ -44,10 +44,12 @@ async def cmd_start(message: Message):
 
 @router.message(F.text.in_([admin, librarian, director, bibliographer]))
 async def choose_role(message: Message, state: FSMContext):
+    # отдельный алгоритм для роли библиотекаря (он участвует в базе данных)
     if message.text == librarian:
         await state.set_state(AuthLibrarianDto.name)
         await message.reply("Введите свое ФИО для входа")
     else:
+        # регистрация роли во временное хранилище (словарь)
         register_role[message.text].append(message.from_user.id)
         context.set_connection(get_register_role(message.from_user.id))
 
@@ -81,7 +83,8 @@ async def back_button(call: CallbackQuery):
 
 
 @router.message(F.text == "Отменить")
-async def cancel_button(message: Message):
+async def cancel_button(message: Message, state: FSMContext):
+    await state.clear()
     await message.answer("Выберите, с чем вы хотите работать", reply_markup=kb.first_part_tables)
 
 
